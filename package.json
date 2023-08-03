@@ -1,0 +1,33 @@
+{
+  "name": "oaxapi",
+  "version": "1.0.0",
+  "description": "Apis siap kio system",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "nodemon --delay 10 index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ajv": "^8.11.0",
+    "axios": "^0.27.2",
+    "bcrypt": "^5.0.1",
+    "ejs": "^3.1.8",
+    "exceljs": "^4.3.0",
+    "express": "^4.18.1",
+    "fs": "^0.0.1-security",
+    "jwt-simple": "^0.5.6",
+    "moment": "^2.29.4",
+    "mssql": "^8.1.2",
+    "mysql-await": "^2.2.2",
+    "mysql2": "^3.4.2",
+    "nodemon": "^3.0.1",
+    "path": "^0.12.7",
+    "pdfkit": "^0.13.0",
+    "soap": "^0.45.0",
+    "socket.io": "^4.5.1",
+    "ssh2-sftp-client": "^9.1.0",
+    "url": "^0.11.0"
+  }
+}
