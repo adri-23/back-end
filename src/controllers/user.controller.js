@@ -4,7 +4,6 @@ import config from "../../config.js"; // variable de nuestro puerto
 import bcrypt from "bcrypt"; //hash de contraseñas
 import validator from "../middleware/validator.js";
 const userCtrl = {
-  // constante
   login: async (req, res) => {
     try {
       let user = await userModel.login(req.body);
