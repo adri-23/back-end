@@ -1,29 +1,31 @@
-import db from "../database/database.js";
+import pool from "../database/database.js";
 import sql from "mssql";
-//const pool = await db.connectDb();
 
 const inmuebleModel = {
   getAllInmuebles: async () => {
     try {
-      let result = await pool.request().query("select * from ctrl_inmueble");
-      return result;
+      const query = "SELECT * FROM ctrl_inmueble";
+      const [rows] = await pool.execute(query);
+      console.log(rows);
+      pool.end(); // Cerrar la conexión después de ejecutar la consulta
+      return rows;
     } catch (err) {
       console.log(err);
       return [];
     }
   },
-  /*
-getById: async (id, callback) => {
-    const query = "SELECT * FROM inmueble WHERE ID_INMUEBLE = ?";
-    db.query(query, [id], (err, results) => {
+
+  getById: async (id, callback) => {
+    const query = "SELECT * FROM ctrl_inmueble WHERE ID_INMUEBLE = ?";
+    pool.query(query, [id], (err, results) => {
       if (err) {
         callback(err, null);
       } else {
         callback(null, results[0]);
       }
     });
-  }
-
+  },
+  /*
   static create(newInmueble, callback) {
     const query = "INSERT INTO inmueble SET ?";
     db.query(query, [newInmueble], (err, results) => {

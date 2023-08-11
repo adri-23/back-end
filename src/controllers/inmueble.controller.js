@@ -7,7 +7,7 @@ import validator from "../middleware/validator.js"; //para hecer peticiones segu
 const inmuebleCtrl = {
   getAllInmuebles: async (req, res) => {
     try {
-      const inmueble = await inmuebleModel.getAll();
+      const inmueble = await inmuebleModel.getAllInmuebles();
       res.json({
         code: 200,
         message: "success",
@@ -24,7 +24,7 @@ const inmuebleCtrl = {
     const { id } = req.params;
 
     try {
-      //const inmueble = await Inmueble.getById(id);
+      const inmueble = await inmuebleModel.getInmuebleById(id);
 
       if (inmueble) {
         res.status(200).json(inmueble);
