@@ -7,7 +7,7 @@ const inmuebleModel = {
       const query = "SELECT * FROM ctrl_inmueble";
       const [rows] = await pool.execute(query);
       console.log(rows);
-      pool.end(); // Cerrar la conexión después de ejecutar la consulta
+      //pool.end(); // Cerrar la conexión después de ejecutar la consulta
       return rows;
     } catch (err) {
       console.log(err);
@@ -15,49 +15,85 @@ const inmuebleModel = {
     }
   },
 
-  getById: async (id, callback) => {
-    const query = "SELECT * FROM ctrl_inmueble WHERE ID_INMUEBLE = ?";
-    pool.query(query, [id], (err, results) => {
-      if (err) {
-        callback(err, null);
-      } else {
-        callback(null, results[0]);
-      }
-    });
+  getInmuebleById: async (id) => {
+    try {
+      const query = "SELECT * FROM ctrl_inmueble WHERE ID_INMUEBLE = ?";
+      const [rows, fields] = await pool.execute(query, [id]);
+      console.log(rows);
+      //pool.end();
+      return rows;
+    } catch (err) {
+      console.log(err);
+      return [];
+    }
   },
-  /*
-  static create(newInmueble, callback) {
-    const query = "INSERT INTO inmueble SET ?";
-    db.query(query, [newInmueble], (err, results) => {
-      if (err) {
-        callback(err, null);
-      } else {
-        callback(null, results.insertId);
-      }
-    });
-  }
 
-  static update(id, updatedInmueble, callback) {
-    const query = "UPDATE inmueble SET ? WHERE ID_INMUEBLE = ?";
-    db.query(query, [updatedInmueble, id], (err, results) => {
-      if (err) {
-        callback(err, null);
-      } else {
-        callback(null, results.affectedRows);
-      }
-    });
-  }
+  create: async (data) => {
+    const connection = await pool();
+    try {
+      const query = "CALL ctrl_inmueble (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+      const values = [
+        data.NUM_CONTRATO,
+        data.CALLE,
+        data.NUMERO_EXTERIOR,
+        data.NUMERO_INTERIOR,
+        data.CODIGO_POSTAL,
+        data.NOMBRE_INMUEBLE,
+        data.OBSERVACION,
+        data.ID_COLONIA,
+        data.ID_TIPO_INMUEBLE,
+        data.ID_USUARIO,
+      ];
+      const [rows] = await connection.execute(query, values);
+      //connection.end();
+      return rows;
+    } catch (err) {
+      console.log(err);
+      return [];
+    }
+  },
 
-  static delete(id, callback) {
-    const query = "DELETE FROM inmueble WHERE ID_INMUEBLE = ?";
-    db.query(query, [id], (err, results) => {
-      if (err) {
-        callback(err, null);
-      } else {
-        callback(null, results.affectedRows);
-      }
-    });
-  } */
+  read: async (id) => {
+    try {
+      const [rows] = await pool.query("CALL ctrl_inmueble (?)");
+      return rows;
+    } catch (err) {
+      console.log(err);
+      return [];
+    }
+  },
+
+  update: async (ID_INMUEBLE, data) => {
+    try {
+      await pool.query("CALL ctrl_inmueble (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+      const values = [
+        ID_INMUEBLE,
+        data.NUM_CONTRATO,
+        data.CALLE,
+        data.NUMERO_EXTERIOR,
+        data.NUMERO_INTERIOR,
+        data.CODIGO_POSTAL,
+        data.NOMBRE_INMUEBLE,
+        data.OBSERVACION,
+        data.ID_COLONIA,
+        data.ID_TIPO_INMUEBLE,
+        data.ID_USUARIO,
+      ];
+    } catch (err) {
+      console.log(err);
+      return [];
+    }
+  },
+
+  delete: async (id) => {
+    try {
+      await pool.query("CALL ctrl_inmueble(?)", [id]);
+    } catch (err) {
+      console.log(err);
+      return [];
+    } finally {
+    }
+  },
 };
 
 export default inmuebleModel;
