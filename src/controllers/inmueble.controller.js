@@ -22,15 +22,14 @@ const inmuebleCtrl = {
 
   getInmuebleById: async (req, res) => {
     const { id } = req.params;
-
     try {
       const inmueble = await inmuebleModel.getInmuebleById(id);
-
-      if (inmueble) {
-        res.status(200).json(inmueble);
-      } else {
-        res.status(404).json({ error: "Inmueble no encontrado" });
-      }
+      res.json({
+        code: 200,
+        message: "success",
+        message_details: "Obtencion exitosa de inmuebles por ID",
+        data: inmueble,
+      });
     } catch (err) {
       console.error("Error al obtener el inmueble por ID", err);
       res.status(500).json({ error: "Error al obtener el inmueble por ID" });
