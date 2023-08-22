@@ -17,11 +17,11 @@ const inmuebleModel = {
 
   getInmuebleById: async (id) => {
     try {
-      const query = "SELECT * FROM ctrl_inmueble WHERE ID_INMUEBLE = ?";
-      const [rows, fields] = await pool.execute(query, [id]);
-      console.log(rows);
-      //pool.end();
-      return rows;
+      let result = await pool
+        .request()
+        .input("ID_INMUEBLE", id.ID_INMUEBLE)
+        .query("SELECT * FROM ctrl_inmueble  WHERE ID_INMUEBLE = @ID_INMUEBLE");
+      return result;
     } catch (err) {
       console.log(err);
       return [];
@@ -45,7 +45,7 @@ const inmuebleModel = {
         data.ID_USUARIO,
       ];
       const [rows] = await connection.execute(query, values);
-      //connection.end();
+      connection.end();
       return rows;
     } catch (err) {
       console.log(err);
