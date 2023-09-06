@@ -5,7 +5,7 @@ import inmuebleModel from "../models/inmueble.model.js";
 import validator from "../middleware/validator.js"; //para hecer peticiones seguras
 
 const inmuebleCtrl = {
-  getAllInmuebles: async (req, res) => {
+  AllInmuebles: async (req, res) => {
     try {
       const inmueble = await inmuebleModel.getAllInmuebles();
       res.json({
@@ -23,12 +23,12 @@ const inmuebleCtrl = {
   getInmuebleById: async (req, res) => {
     const { id } = req.params;
     try {
-      const inmueble = await inmuebleModel.getInmuebleById(id);
+      const inmuebles = await inmuebleModel.getInmuebleById(id);
       res.json({
         code: 200,
         message: "success",
         message_details: "Obtencion exitosa de inmuebles por ID",
-        data: inmueble,
+        data: inmuebles,
       });
     } catch (err) {
       console.error("Error al obtener el inmueble por ID", err);
@@ -40,7 +40,7 @@ const inmuebleCtrl = {
     const nuevoInmueble = req.body;
 
     try {
-      const inmuebleId = await create(nuevoInmueble);
+      const inmuebleId = await inmuebleModel.create(nuevoInmueble);
       res
         .status(201)
         .json({ id: inmuebleId, message: "Inmueble creado exitosamente" });
@@ -55,7 +55,7 @@ const inmuebleCtrl = {
     const datosActualizados = req.body;
 
     try {
-      const filasAfectadas = await Inmueble.update(id, datosActualizados);
+      const filasAfectadas = await inmuebleModel.update(id, datosActualizados);
 
       if (filasAfectadas > 0) {
         res.status(200).json({ message: "Inmueble actualizado exitosamente" });
@@ -71,7 +71,7 @@ const inmuebleCtrl = {
   deleteInmueble: async (req, res) => {
     const { id } = req.params;
     try {
-      const filasAfectadas = await Inmueble.remove(id);
+      const filasAfectadas = await inmuebleModel.delete(id);
 
       if (filasAfectadas > 0) {
         res.status(200).json({ message: "Inmueble eliminado exitosamente" });
