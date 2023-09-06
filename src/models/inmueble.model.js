@@ -7,7 +7,7 @@ const inmuebleModel = {
       const query = "SELECT * FROM ctrl_inmueble";
       const [rows] = await pool.execute(query);
       console.log(rows);
-      //pool.end(); // Cerrar la conexión después de ejecutar la consulta
+      pool.end(); // Cerrar la conexión después de ejecutar la consulta
       return rows;
     } catch (err) {
       console.log(err);
@@ -18,7 +18,7 @@ const inmuebleModel = {
   getInmuebleById: async (id) => {
     try {
       let result = await pool
-        .request()
+        .getConnection()
         .input("ID_INMUEBLE", id.ID_INMUEBLE)
         .query("SELECT * FROM ctrl_inmueble  WHERE ID_INMUEBLE = @ID_INMUEBLE");
       return result;
@@ -31,8 +31,9 @@ const inmuebleModel = {
   create: async (data) => {
     const connection = await pool();
     try {
-      const query = "CALL ctrl_inmueble (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+      const query = "CALL pa_insert_inmueble(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
       const values = [
+        data.ID_INMUEBLE,
         data.NUM_CONTRATO,
         data.CALLE,
         data.NUMERO_EXTERIOR,
@@ -44,18 +45,8 @@ const inmuebleModel = {
         data.ID_TIPO_INMUEBLE,
         data.ID_USUARIO,
       ];
-      const [rows] = await connection.execute(query, values);
+      const [rows] = await pool.execute(query, values);
       connection.end();
-      return rows;
-    } catch (err) {
-      console.log(err);
-      return [];
-    }
-  },
-
-  read: async (id) => {
-    try {
-      const [rows] = await pool.query("CALL ctrl_inmueble (?)");
       return rows;
     } catch (err) {
       console.log(err);
@@ -65,7 +56,9 @@ const inmuebleModel = {
 
   update: async (ID_INMUEBLE, data) => {
     try {
-      await pool.query("CALL ctrl_inmueble (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+      await pool.query(
+        "CALL pa_update_inmueble(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+      );
       const values = [
         ID_INMUEBLE,
         data.NUM_CONTRATO,
