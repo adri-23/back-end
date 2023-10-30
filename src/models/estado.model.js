@@ -47,7 +47,7 @@ const estadoModel = {
       //console.log(ID_ESTADO, "///");
       const [rows] = await pool.execute(query, values);
       //console.log(rows);
-      pool.end();
+      //pool.end();
       return rows;
     } catch (err) {
       console.log(err);
