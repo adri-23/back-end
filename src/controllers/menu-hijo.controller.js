@@ -1,17 +1,18 @@
 import jwt from "../services/jwt.js"; //generador de token
 import config from "../../config.js"; //lleva las variables del puerto
 import bcrypt from "bcrypt"; //encriptacion de contraseñas
+import menuHijoModel from "../models/menu-hijo.model.js";
 import validator from "../middleware/validator.js"; //para hecer peticiones seguras
 
 const menuHijoCtrl = {
   getAllMenuHijo: async (req, res) => {
     try {
-      //const menuHijo = await inmuebleModel.getAllInmuebles();
+      const menuHijo = await menuHijoModel.getAllMenuHijo();
       res.json({
         code: 200,
         message: "success",
         message_details: "Obtencion exitosa de menu hijos",
-        data,
+        data: menuHijo,
       });
     } catch (err) {
       console.error("Error al obtener menu hijos", err);
@@ -23,13 +24,13 @@ const menuHijoCtrl = {
     const { id } = req.params;
 
     try {
-      //const menuHijo = await menuHijoModel.getMenuHijoById(id);
-
-      if (menuHijo) {
-        res.status(200).json(menuHijo);
-      } else {
-        res.status(404).json({ error: "Menu hijo no encontrado" });
-      }
+      const menuHijo = await menuHijoModel.getMenuHijoById(id);
+      res.json({
+        code: 200,
+        message: "success",
+        message_details: "Obtencion exitosa de menu hijo por ID",
+        data: menuHijo,
+      });
     } catch (err) {
       console.error("Error al obtener menu hijo por ID", err);
       res.status(500).json({ error: "Error al obtener menu hijo por ID" });
@@ -37,13 +38,21 @@ const menuHijoCtrl = {
   },
 
   createMenuHijo: async (req, res) => {
-    const nuevoMenuHijo = req.body;
+    const { ID_MENU_HIJO, URL, NOMBRE, ICONO, STATUS, ID_MENU_PADRE } =
+      req.body;
 
     try {
-      const menuHijoId = await create(nuevoMenuHijo);
+      const menuHijo = await menuHijoModel.createMenuHijo({
+        ID_MENU_HIJO,
+        URL,
+        NOMBRE,
+        ICONO,
+        STATUS,
+        ID_MENU_PADRE,
+      });
       res
         .status(201)
-        .json({ id: menuHijoId, message: "Menu hijo creado exitosamente" });
+        .json({ id: menuHijo, message: "Menu hijo creado exitosamente" });
     } catch (err) {
       console.error("Error al crear Menu hijo", err);
       res.status(500).json({ error: "Error al crear Menu hijo" });
@@ -55,9 +64,12 @@ const menuHijoCtrl = {
     const datosActualizados = req.body;
 
     try {
-      const filasAfectadas = await MenuHijo.update(id, datosActualizados);
+      const filasAfectadas = await menuHijoModel.updateMenuHijo(
+        id,
+        datosActualizados
+      );
 
-      if (filasAfectadas > 0) {
+      if (filasAfectadas.affectedRows > 0) {
         res.status(200).json({ message: "Menu hijo actualizado exitosamente" });
       } else {
         res.status(404).json({ error: "Menu hijo no encontrado" });
@@ -71,7 +83,7 @@ const menuHijoCtrl = {
   deleteMenuHijo: async (req, res) => {
     const { id } = req.params;
     try {
-      const filasAfectadas = await MenuHijo.remove(id);
+      const filasAfectadas = await menuHijoModel.deleteMenuHijo(id);
 
       if (filasAfectadas > 0) {
         res.status(200).json({ message: "Menu hijo eliminado exitosamente" });

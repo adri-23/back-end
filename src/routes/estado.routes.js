@@ -4,8 +4,8 @@ const router = express.Router();
 
 router.get("/estado", estadoCtrl.getAllEstado);
 router.get("/estado/:id", estadoCtrl.getEstadoById);
-router.post("/estado/:create", estadoCtrl.createEstado);
-router.put("/estado/:update", estadoCtrl.updateEstado);
-router.delete("/estado/:delete", estadoCtrl.deleteEstado);
+router.post("/estado", estadoCtrl.createEstado);
+router.put("/estado/:id", estadoCtrl.updateEstado);
+router.delete("/estado/:id", estadoCtrl.deleteEstado);
 
 export default router;

@@ -1,4 +1,4 @@
-import userModel from "../models/user.model.js";
+//import userModel from "../models/user.model.js";
 import jwt from "../services/jwt.js"; //generador de tokens
 import config from "../../config.js"; // variable de nuestro puerto
 import bcrypt from "bcrypt"; //hash de contraseñas

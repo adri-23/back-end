@@ -1,16 +1,18 @@
 import jwt from "../services/jwt.js"; //generador de token
 import config from "../../config.js"; //lleva las variables del puerto
 import bcrypt from "bcrypt"; //encriptacion de contraseñas
+import estadoModel from "../models/estado.model.js";
 import validator from "../middleware/validator.js"; //para hecer peticiones seguras
 
 const estadoCtrl = {
   getAllEstado: async (req, res) => {
     try {
+      const estado = await estadoModel.getAllEstados();
       res.json({
         code: 200,
         message: "succes",
         message_details: "Obtencion exitosa de estado",
-        data,
+        data: estado,
       });
     } catch (err) {
       console.error("Error al obtener los estados", err);
@@ -20,13 +22,14 @@ const estadoCtrl = {
 
   getEstadoById: async (req, res) => {
     const { id } = req.params;
-
     try {
-      if (estado) {
-        res.status(200).json(estado);
-      } else {
-        res.status(400).json({ error: "Estado no encontrado" });
-      }
+      const estado = await estadoModel.getEstadoById(id);
+      res.json({
+        code: 200,
+        message: "success",
+        message_details: "Obtencion exitosa de estado por ID",
+        data: estado,
+      });
     } catch (err) {
       console.error("Error alobtener el estado por ID", err);
       res.status(500).json({ error: "Error al obtener el estado por ID" });
@@ -34,13 +37,17 @@ const estadoCtrl = {
   },
 
   createEstado: async (req, res) => {
-    const nuevoEstado = req.body;
+    const { ID_ESTADO, NOMBRE, PAIS } = req.body;
 
     try {
-      const estadoId = await create(nuevoEstado);
+      const estado = await estadoModel.createEstado({
+        ID_ESTADO,
+        NOMBRE,
+        PAIS,
+      });
       res
         .status(201)
-        .json({ id: estadoId, message: "Estado creado exitosamente" });
+        .json({ id: estado, message: "Estado creado exitosamente" });
     } catch (err) {
       console.error("Error al crear el estado", err);
       res.status(500).json({ error: "Error al crear el estado" });
@@ -52,9 +59,12 @@ const estadoCtrl = {
     const datosActualizados = req.body;
 
     try {
-      const filasAfectadas = await Estado.update(id, datosActualizados);
+      const filasAfectadas = await estadoModel.updateEstado(
+        id,
+        datosActualizados
+      );
 
-      if (filasAfectadas > 0) {
+      if (filasAfectadas.affectedRows > 0) {
         res.status(201).json({ message: "Estado actualizado exitosamente" });
       } else {
         res.status(404).json({ error: "Estado no encontrado" });
@@ -68,10 +78,10 @@ const estadoCtrl = {
   deleteEstado: async (req, res) => {
     const { id } = req.params;
     try {
-      const filasAfectadas = await Estado.remove(id);
+      const filasAfectadas = await estadoModel.deleteEstado(id);
 
       if (filasAfectadas > 0) {
-        res.status(200).json({ message: "Estado elimando exitosamente" });
+        res.status(200).json({ message: "Estado eliminado exitosamente" });
       } else {
         res.status(404).json({ error: "Estado no encontrado" });
       }

@@ -1,10 +1,10 @@
 import pool from "../database/database.js";
 import sql from "mssql";
 
-const perfilModel = {
-  getAllPerfil: async () => {
+const tipoEventoModel = {
+  getAllTipoEvento: async () => {
     try {
-      const query = "CALL pa_select_perfil";
+      const query = "CALL pa_select_tipoEvento";
       const [rows] = await pool.execute(query);
       console.log(rows);
       //pool.end(); // Cerrar la conexión después de ejecutar la consulta
@@ -15,9 +15,9 @@ const perfilModel = {
     }
   },
 
-  getPerfilById: async (id) => {
+  getTipoEventoById: async (id) => {
     try {
-      const query = "SELECT * FROM cat_perfil  WHERE ID_PERFIL = ?";
+      const query = "SELECT * FROM cat_tipo_evento  WHERE ID_TIPO_EVENTO = ?";
       const [rows] = await pool.execute(query, [id]);
       return rows;
     } catch (err) {
@@ -26,10 +26,10 @@ const perfilModel = {
     }
   },
 
-  createPerfil: async (data) => {
+  createTipoEvento: async (data) => {
     try {
-      const query = "CALL pa_insert_perfil(?, ?, ?)";
-      const values = [data.ID_PERFIL, data.PERFIL, data.ESTATUS];
+      const query = "CALL pa_insert_tipoEvento(?, ?)";
+      const values = [data.ID_TIPO_EVENTO, data.TIPO];
       //console.log(data, "///");
       const [rows] = await pool.execute(query, values);
       pool.end();
@@ -40,10 +40,10 @@ const perfilModel = {
     }
   },
 
-  updatePerfil: async (ID_PERFIL, data) => {
+  updateTipoEvento: async (ID_TIPO_EVENTO, data) => {
     try {
-      const query = "CALL pa_update_perfil(?, ?, ?)";
-      const values = [ID_PERFIL, data.PERFIL, data.ESTATUS];
+      const query = "CALL pa_update_tipoEvento(?, ?)";
+      const values = [ID_TIPO_EVENTO, data.TIPO];
       //console.log(data, "///");
       const [rows] = await pool.execute(query, values);
       //console.log(rows);
@@ -55,9 +55,9 @@ const perfilModel = {
     }
   },
 
-  deletePerfil: async (id) => {
+  deleteTipoEvento: async (id) => {
     try {
-      const query = "CALL pa_delete_perfil(?)";
+      const query = "CALL pa_delete_tipoEvento(?)";
       const [rows] = await pool.execute(query, [id]);
       pool.end();
       return rows.affectedRows;
@@ -69,4 +69,4 @@ const perfilModel = {
   },
 };
 
-export default perfilModel;
+export default tipoEventoModel;
