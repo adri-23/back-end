@@ -42,7 +42,7 @@ const invitacionCtrl = {
     const { ID_INVITADO, ID_EVENTO, CODIGO_ACCESO } = req.body;
 
     try {
-      const invitacion = await inmuebleModel.createInvitacion({
+      const invitacion = await invitacionModel.createInvitacion({
         ID_INVITADO,
         ID_EVENTO,
         CODIGO_ACCESO,
