@@ -1,10 +1,10 @@
 import pool from "../database/database.js";
 import sql from "mssql";
 
-const perfilModel = {
-  getAllPerfil: async () => {
+const estadoModel = {
+  getAllEstados: async () => {
     try {
-      const query = "CALL pa_select_perfil";
+      const query = "CALL pa_select_Estado";
       const [rows] = await pool.execute(query);
       console.log(rows);
       //pool.end(); // Cerrar la conexión después de ejecutar la consulta
@@ -15,9 +15,9 @@ const perfilModel = {
     }
   },
 
-  getPerfilById: async (id) => {
+  getEstadoById: async (id) => {
     try {
-      const query = "SELECT * FROM cat_perfil  WHERE ID_PERFIL = ?";
+      const query = "SELECT * FROM cat_estado  WHERE ID_ESTADO = ?";
       const [rows] = await pool.execute(query, [id]);
       return rows;
     } catch (err) {
@@ -26,10 +26,10 @@ const perfilModel = {
     }
   },
 
-  createPerfil: async (data) => {
+  createEstado: async (data) => {
     try {
-      const query = "CALL pa_insert_perfil(?, ?, ?)";
-      const values = [data.ID_PERFIL, data.PERFIL, data.ESTATUS];
+      const query = "CALL pa_insert_Estado(?, ?, ?)";
+      const values = [data.ID_ESTADO, data.NOMBRE, data.PAIS];
       //console.log(data, "///");
       const [rows] = await pool.execute(query, values);
       pool.end();
@@ -40,11 +40,11 @@ const perfilModel = {
     }
   },
 
-  updatePerfil: async (ID_PERFIL, data) => {
+  updateEstado: async (ID_ESTADO, data) => {
     try {
-      const query = "CALL pa_update_perfil(?, ?, ?)";
-      const values = [ID_PERFIL, data.PERFIL, data.ESTATUS];
-      //console.log(data, "///");
+      const query = "CALL pa_update_Estado(?, ?, ?)";
+      const values = [ID_ESTADO, data.NOMBRE, data.PAIS];
+      //console.log(ID_ESTADO, "///");
       const [rows] = await pool.execute(query, values);
       //console.log(rows);
       pool.end();
@@ -55,9 +55,9 @@ const perfilModel = {
     }
   },
 
-  deletePerfil: async (id) => {
+  deleteEstado: async (id) => {
     try {
-      const query = "CALL pa_delete_perfil(?)";
+      const query = "CALL pa_delete_Estado(?)";
       const [rows] = await pool.execute(query, [id]);
       pool.end();
       return rows.affectedRows;
@@ -69,4 +69,4 @@ const perfilModel = {
   },
 };
 
-export default perfilModel;
+export default estadoModel;

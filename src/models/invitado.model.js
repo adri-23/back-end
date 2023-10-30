@@ -1,10 +1,10 @@
 import pool from "../database/database.js";
 import sql from "mssql";
 
-const perfilModel = {
-  getAllPerfil: async () => {
+const invitadoModel = {
+  getAllInvitado: async () => {
     try {
-      const query = "CALL pa_select_perfil";
+      const query = "CALL pa_select_Invitado";
       const [rows] = await pool.execute(query);
       console.log(rows);
       //pool.end(); // Cerrar la conexión después de ejecutar la consulta
@@ -15,9 +15,9 @@ const perfilModel = {
     }
   },
 
-  getPerfilById: async (id) => {
+  getInvitadoById: async (id) => {
     try {
-      const query = "SELECT * FROM cat_perfil  WHERE ID_PERFIL = ?";
+      const query = "SELECT * FROM ctrl_invitado  WHERE ID_INVITADO = ?";
       const [rows] = await pool.execute(query, [id]);
       return rows;
     } catch (err) {
@@ -26,13 +26,21 @@ const perfilModel = {
     }
   },
 
-  createPerfil: async (data) => {
+  createIvitado: async (data) => {
     try {
-      const query = "CALL pa_insert_perfil(?, ?, ?)";
-      const values = [data.ID_PERFIL, data.PERFIL, data.ESTATUS];
+      const query = "CALL pa_insert_Invitado(?, ?, ?, ?, ?, ?, ?)";
+      const values = [
+        data.ID_INVITADO,
+        data.NOMBRE,
+        data.APELLIDO_PATERNO,
+        data.APELLIDO_MATERNO,
+        data.PLACA,
+        data.PERSONA_ADICIONAL,
+        data.INFORMACION_ADICIONAL,
+      ];
       //console.log(data, "///");
       const [rows] = await pool.execute(query, values);
-      pool.end();
+      //pool.end();
       return rows;
     } catch (err) {
       console.log(err);
@@ -40,10 +48,18 @@ const perfilModel = {
     }
   },
 
-  updatePerfil: async (ID_PERFIL, data) => {
+  updateInvitado: async (ID_INVITADO, data) => {
     try {
-      const query = "CALL pa_update_perfil(?, ?, ?)";
-      const values = [ID_PERFIL, data.PERFIL, data.ESTATUS];
+      const query = "CALL pa_update_Invitado(?, ?, ?, ?, ?, ?, ?)";
+      const values = [
+        ID_INVITADO,
+        data.NOMBRE,
+        data.APELLIDO_PATERNO,
+        data.APELLIDO_MATERNO,
+        data.PLACA,
+        data.PERSONA_ADICIONAL,
+        data.INFORMACION_ADICIONAL,
+      ];
       //console.log(data, "///");
       const [rows] = await pool.execute(query, values);
       //console.log(rows);
@@ -55,9 +71,9 @@ const perfilModel = {
     }
   },
 
-  deletePerfil: async (id) => {
+  deleteInvitado: async (id) => {
     try {
-      const query = "CALL pa_delete_perfil(?)";
+      const query = "CALL pa_delete_Invitado(?)";
       const [rows] = await pool.execute(query, [id]);
       pool.end();
       return rows.affectedRows;
@@ -69,4 +85,4 @@ const perfilModel = {
   },
 };
 
-export default perfilModel;
+export default invitadoModel;

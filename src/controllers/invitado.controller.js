@@ -1,17 +1,18 @@
 import jwt from "../services/jwt.js"; //generador de token
 import config from "../../config.js"; //lleva las variables del puerto
 import bcrypt from "bcrypt"; //encriptacion de contraseñas
+import invitadoModel from "../models/invitado.model.js";
 import validator from "../middleware/validator.js"; //para hecer peticiones seguras
 
 const invitadoCtrl = {
-  getAllInvitado: async (req, res) => {
+  getAllInvitados: async (req, res) => {
     try {
-      //const invitado = await invitadoModel.getAllInvitado();
+      const invitado = await invitadoModel.getAllInvitado();
       res.json({
         code: 200,
         message: "success",
         message_details: "Obtencion exitosa de invitados",
-        data,
+        data: invitado,
       });
     } catch (err) {
       console.error("Error al obtener los invitados", err);
@@ -23,13 +24,13 @@ const invitadoCtrl = {
     const { id } = req.params;
 
     try {
-      //const invitado = await invitadoModel.getInvitadoById(id);
-
-      if (invitado) {
-        res.status(200).json(invitado);
-      } else {
-        res.status(404).json({ error: "Invitado no encontrado" });
-      }
+      const invitado = await invitadoModel.getInvitadoById(id);
+      res.json({
+        code: 200,
+        message: "success",
+        message_details: "Obtencion exitosa de invitado por ID",
+        data: invitado,
+      });
     } catch (err) {
       console.error("Error al obtener el invitado por ID", err);
       res.status(500).json({ error: "Error al obtener el invitado por ID" });
@@ -37,13 +38,29 @@ const invitadoCtrl = {
   },
 
   createInvitado: async (req, res) => {
-    const nuevoInvitado = req.body;
+    const {
+      ID_INVITADO,
+      NOMBRE,
+      APELLIDO_PATERNO,
+      APELLIDO_MATERNO,
+      PLACA,
+      PERSONA_ADICIONAL,
+      INFORMACION_ADICIONAL,
+    } = req.body;
 
     try {
-      const invitadoId = await create(nuevoInvitado);
+      const invitado = await invitadoModel.createIvitado({
+        ID_INVITADO,
+        NOMBRE,
+        APELLIDO_PATERNO,
+        APELLIDO_MATERNO,
+        PLACA,
+        PERSONA_ADICIONAL,
+        INFORMACION_ADICIONAL,
+      });
       res
         .status(201)
-        .json({ id: invitadoId, message: "Invitado creado exitosamente" });
+        .json({ id: invitado, message: "Invitado creado exitosamente" });
     } catch (err) {
       console.error("Error al crear el invitado", err);
       res.status(500).json({ error: "Error al crear el invitado" });
@@ -55,9 +72,12 @@ const invitadoCtrl = {
     const datosActualizados = req.body;
 
     try {
-      const filasAfectadas = await Invitado.update(id, datosActualizados);
+      const filasAfectadas = await invitadoModel.updateInvitado(
+        id,
+        datosActualizados
+      );
 
-      if (filasAfectadas > 0) {
+      if (filasAfectadas.affectedRows > 0) {
         res.status(200).json({ message: "Invitado actualizado exitosamente" });
       } else {
         res.status(404).json({ error: "Invitado no encontrado" });
@@ -71,7 +91,7 @@ const invitadoCtrl = {
   deleteInvitado: async (req, res) => {
     const { id } = req.params;
     try {
-      const filasAfectadas = await Invitado.remove(id);
+      const filasAfectadas = await invitadoModel.deleteInvitado(id);
 
       if (filasAfectadas > 0) {
         res.status(200).json({ message: "Invitado eliminado exitosamente" });

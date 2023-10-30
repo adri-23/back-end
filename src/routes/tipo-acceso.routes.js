@@ -1,13 +1,11 @@
-import accesoCtrl from "../controllers/tipo-acceso.controller.js";
+import tipoAccesoCtrl from "../controllers/tipo-acceso.controller.js";
 import express from "express";
 const router = express.Router();
 
-
-router.get("/acceso", accesoCtrl.getAllAcceso);
-router.get("/acceso/:id", accesoCtrl.getAccesoById);
-router.post("/acceso/:create", accesoCtrl.createAcceso);
-router.put("/acceso/:update", accesoCtrl.updateAcceso);
-router.delete("/acceso/:delete", accesoCtrl.deleteAcceso);
-
+router.get("/acceso", tipoAccesoCtrl.getAllAcceso);
+router.get("/acceso/:id", tipoAccesoCtrl.getAccesoById);
+router.post("/acceso", tipoAccesoCtrl.createAcceso);
+router.put("/acceso/:id", tipoAccesoCtrl.updateAcceso);
+router.delete("/acceso/:id", tipoAccesoCtrl.deleteAcceso);
 
 export default router;

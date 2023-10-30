@@ -1,90 +1,95 @@
 import jwt from "../services/jwt.js"; //generador de token
 import config from "../../config.js"; //lleva las variables del puerto
 import bcrypt from "bcrypt"; //encriptacion de contraseñas
+import tipoAccesoModel from "../models/tipo-acceso.model.js";
 import validator from "../middleware/validator.js"; //para hecer peticiones seguras
 
-const accesoCtrl = {
-    getAllAcceso: async (req, res) => {
-        try {
-            res.json({
-                code:200,
-                message: "success",
-                message_details: "Obtencion exitosa al acceso",
-                data,
+const tipoAccesoCtrl = {
+  getAllAcceso: async (req, res) => {
+    try {
+      const acceso = await tipoAccesoModel.getAllAcessos();
+      res.json({
+        code: 200,
+        message: "success",
+        message_details: "Obtencion exitosa al acceso",
+        data: acceso,
+      });
+    } catch (err) {
+      console.error("Error al obtener el acceso");
+      res.status(500).json({ error: "Error al obtener el acceso" });
+    }
+  },
 
-            });
-        } catch (err) {
-            console.error("Error al obtener el acceso");
-            res.status(500).json({ error: "Error al obtener el acceso"});
-        }
-    },
+  getAccesoById: async (req, res) => {
+    const { id } = req.params;
 
+    try {
+      const acceso = await tipoAccesoModel.getTipoAccesoById(id);
+      res.json({
+        code: 200,
+        message: "success",
+        message_details: "Obtencion exitosa de acceso por ID",
+        data: acceso,
+      });
+    } catch (err) {
+      console.error("Error al obtener el acceso por ID", err);
+      res.status(500).json({ error: "Error al obtener el acceso por ID" });
+    }
+  },
 
-    getAccesoById: async (req, res) => {
-        const { id } = req.params;
+  createAcceso: async (req, res) => {
+    const { ID_TIPO_ACCESO, NOMBRE } = req.body;
 
-        try {
+    try {
+      const acceso = await tipoAccesoModel.createTipoAcceso({
+        ID_TIPO_ACCESO,
+        NOMBRE,
+      });
+      res
+        .status(201)
+        .json({ id: acceso, message: "Acceso creado exitosamente" });
+    } catch (err) {
+      console.error("Error al crear el acceso", err);
+      res.status(500).json({ error: "Error al crear el acceso" });
+    }
+  },
 
-            if (acceso) {
-                res.status(200).json(acceso);
-            } else {
-                res.status(404).json({ error: "Error al obtener el acceso por ID"});
-            }
-        } catch (err) {
-            console.error("Error al obtener el acceso por ID", err);
-            res.status(500).json({ error: "Error al obtener el acceso por ID"});
-        } 
-    },
+  updateAcceso: async (req, res) => {
+    const { id } = req.params;
+    const datosActualizados = req.body;
 
-    createAcceso: async (req, res) => {
-        const nuevoAcceso = req.body;
+    try {
+      const filasAfectadas = await tipoAccesoModel.updateTipoAcceso(
+        id,
+        datosActualizados
+      );
 
-        try {
-            const accesoId = await create(nuevoAcceso);
-            res
-               .status(201)
-               .json({ id: accesoId, message: "Acceso creado exitosamente" });
-        }  catch (err) {
-            console.error("Error al crear el acceso", err);
-            res.status(500).json({error: "Error al crear el acceso"});
-        }
-    },
+      if (filasAfectadas.affectedRows > 0) {
+        res.status(200).json({ message: " Acceso actualizado exitosamente" });
+      } else {
+        res.status(400).json({ error: "Acceso no encontrado" });
+      }
+    } catch (err) {
+      console.error("Error al actualizar el acceso", err);
+      res.status(500).json({ error: "Error al actualizar el acceso" });
+    }
+  },
 
-    updateAcceso: async (req, res) => {
-        const { id } = req.params;
-        const datosActualizados = req.body;
+  deleteAcceso: async (req, res) => {
+    const { id } = req.params;
+    try {
+      const filasAfectadas = await tipoAccesoModel.deleteTipoAcceso(id);
 
-        try {
-            const filasAfectadas = await acceso.update(id, datosActualizados );
-
-            if (filasAfectadas > 0){
-                res.status(200).json({message: " Acceso actualizado exitosamente"});
-            } else {
-                res.status(400).json({error: "Acceso no encontrado"});
-            } 
-        } catch (err) {
-            console.error("Error al actualizar el acceso", err);
-            res.status(500).json({error: "Error al actualizar el acceso"});
-        }
-    },
-
-
-    deleteAcceso: async (req, res) => {
-        const { id } = req.params;
-        try {
-            const filasAfectadas = await acceso.remove(id);
-
-            if (filasAfectadas > 0) {
-                res.status(200).json({message: "Acceso eliminado exitosamente"});
-            } else {
-                res.status(404).json({error: "Acceso no encontrado"});
-            }
-        } catch (err) {
-            console.error("Error al eliminar el acceso", err);
-            res.status(500).json({ error: "Error al eliminar el acceso"});
-
-        }
-    },
+      if (filasAfectadas > 0) {
+        res.status(200).json({ message: "Acceso eliminado exitosamente" });
+      } else {
+        res.status(404).json({ error: "Acceso no encontrado" });
+      }
+    } catch (err) {
+      console.error("Error al eliminar el acceso", err);
+      res.status(500).json({ error: "Error al eliminar el acceso" });
+    }
+  },
 };
 
-export default accesoCtrl;
+export default tipoAccesoCtrl;

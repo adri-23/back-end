@@ -1,17 +1,19 @@
 import jwt from "../services/jwt.js"; //generador de token
 import config from "../../config.js"; //lleva las variables del puerto
 import bcrypt from "bcrypt"; //encriptacion de contraseñas
+import inmuebleModel from "../models/invitacion.model.js";
 import validator from "../middleware/validator.js"; //para hecer peticiones seguras
+import invitacionModel from "../models/invitacion.model.js";
 
 const invitacionCtrl = {
   getAllInvitacion: async (req, res) => {
     try {
-      //const invitacion = await invitacionModel.getAllInvitacion();
+      const invitacion = await invitacionModel.getAllInvitacion();
       res.json({
         code: 200,
         message: "success",
         message_details: "Obtencion exitosa de invitaciones",
-        data,
+        data: invitacion,
       });
     } catch (err) {
       console.error("Error al obtener las invitaciones", err);
@@ -23,13 +25,13 @@ const invitacionCtrl = {
     const { id } = req.params;
 
     try {
-      //const invitacion = await invitacionModel.getInvitacionById(id);
-
-      if (invitacion) {
-        res.status(200).json(invitacion);
-      } else {
-        res.status(404).json({ error: "Invitacion no encontrado" });
-      }
+      const invitacion = await invitacionModel.getInvitacionById(id);
+      res.json({
+        code: 200,
+        message: "success",
+        message_details: "Obtencion exitosa de invitacion por ID",
+        data: invitacion,
+      });
     } catch (err) {
       console.error("Error al obtener la invitacion por ID", err);
       res.status(500).json({ error: "Error al obtener la invitacion por ID" });
@@ -37,13 +39,17 @@ const invitacionCtrl = {
   },
 
   createInvitacion: async (req, res) => {
-    const nuevaInvitacion = req.body;
+    const { ID_INVITADO, ID_EVENTO, CODIGO_ACCESO } = req.body;
 
     try {
-      const invitacionId = await create(nuevaInvitacion);
+      const invitacion = await inmuebleModel.createInvitacion({
+        ID_INVITADO,
+        ID_EVENTO,
+        CODIGO_ACCESO,
+      });
       res
         .status(201)
-        .json({ id: invitacionId, message: "Invitacion creada exitosamente" });
+        .json({ id: invitacion, message: "Invitacion creada exitosamente" });
     } catch (err) {
       console.error("Error al crear la invitacion", err);
       res.status(500).json({ error: "Error al crear la invitacion" });
@@ -55,9 +61,12 @@ const invitacionCtrl = {
     const datosActualizados = req.body;
 
     try {
-      const filasAfectadas = await Invitacion.update(id, datosActualizados);
+      const filasAfectadas = await invitacionModel.updateInvitacion(
+        id,
+        datosActualizados
+      );
 
-      if (filasAfectadas > 0) {
+      if (filasAfectadas.affectedRows > 0) {
         res
           .status(200)
           .json({ message: "Invitacion actualizada exitosamente" });
@@ -73,7 +82,7 @@ const invitacionCtrl = {
   deleteInvitacion: async (req, res) => {
     const { id } = req.params;
     try {
-      const filasAfectadas = await Invitacion.remove(id);
+      const filasAfectadas = await invitacionModel.deleteInvitacion(id);
 
       if (filasAfectadas > 0) {
         res.status(200).json({ message: "Invitacion eliminada exitosamente" });

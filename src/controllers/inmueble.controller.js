@@ -5,7 +5,7 @@ import inmuebleModel from "../models/inmueble.model.js";
 import validator from "../middleware/validator.js"; //para hecer peticiones seguras
 
 const inmuebleCtrl = {
-  AllInmuebles: async (req, res) => {
+  getAllInmuebles: async (req, res) => {
     try {
       const inmueble = await inmuebleModel.getAllInmuebles();
       res.json({
@@ -27,7 +27,7 @@ const inmuebleCtrl = {
       res.json({
         code: 200,
         message: "success",
-        message_details: "Obtencion exitosa de inmuebles por ID",
+        message_details: "Obtencion exitosa de inmueble por ID",
         data: inmuebles,
       });
     } catch (err) {
@@ -37,13 +37,37 @@ const inmuebleCtrl = {
   },
 
   createInmueble: async (req, res) => {
-    const nuevoInmueble = req.body;
+    const {
+      ID_INMUEBLE,
+      NUM_CONTRATO,
+      CALLE,
+      NUMERO_EXTERIOR,
+      NUMERO_INTERIOR,
+      CODIGO_POSTAL,
+      NOMBRE_INMUEBLE,
+      OBSERVACION,
+      ID_COLONIA,
+      ID_TIPO_INMUEBLE,
+      ID_USUARIO,
+    } = req.body;
 
     try {
-      const inmuebleId = await inmuebleModel.create(nuevoInmueble);
+      const inmueble = await inmuebleModel.create({
+        ID_INMUEBLE,
+        NUM_CONTRATO,
+        CALLE,
+        NUMERO_EXTERIOR,
+        NUMERO_INTERIOR,
+        CODIGO_POSTAL,
+        NOMBRE_INMUEBLE,
+        OBSERVACION,
+        ID_COLONIA,
+        ID_TIPO_INMUEBLE,
+        ID_USUARIO,
+      });
       res
         .status(201)
-        .json({ id: inmuebleId, message: "Inmueble creado exitosamente" });
+        .json({ id: inmueble, message: "Inmueble creado exitosamente" });
     } catch (err) {
       console.error("Error al crear el inmueble", err);
       res.status(500).json({ error: "Error al crear el inmueble" });
@@ -57,7 +81,7 @@ const inmuebleCtrl = {
     try {
       const filasAfectadas = await inmuebleModel.update(id, datosActualizados);
 
-      if (filasAfectadas > 0) {
+      if (filasAfectadas.affectedRows > 0) {
         res.status(200).json({ message: "Inmueble actualizado exitosamente" });
       } else {
         res.status(404).json({ error: "Inmueble no encontrado" });

@@ -1,16 +1,18 @@
 import jwt from "../services/jwt.js"; //generador de token
 import config from "../../config.js"; //lleva las variables del puerto
 import bcrypt from "bcrypt"; //encriptacion de contraseñas
+import tipoInmuebleModel from "../models/tipo-inmueble.model.js";
 import validator from "../middleware/validator.js"; //para hecer peticiones seguras
 
 const tipoInmuebleCtrl = {
   getAlltipoInmueble: async (req, res) => {
     try {
+      const tipoInmueble = await tipoInmuebleModel.getAllTipoInmueble();
       res.json({
         code: 200,
         message: "success",
         message_details: "obtencion exitosa de tipo de inmuebles",
-        data,
+        data: tipoInmueble,
       });
     } catch (err) {
       console.error("Error al obtener los tipos de inmuebles");
@@ -24,13 +26,13 @@ const tipoInmuebleCtrl = {
     const { id } = req.param;
 
     try {
-      //const tipoInmueble = await tipoInmueble.getById(id);
-
-      if (tipoInmueble) {
-        res.status(200).json(tipoInmueble);
-      } else {
-        res.status(404).json({ erro: "Error al obtener tipos de inmuebles" });
-      }
+      const tipoInmueble = await tipoInmuebleModel.getTipoInmuebleById(id);
+      res.json({
+        code: 200,
+        message: "success",
+        message_details: "Obtencion exitosa de tipo de inmueble por ID",
+        data: tipoInmueble,
+      });
     } catch (err) {
       console.error("Error al obtener tipos de inmuebles por ID", err);
       res.status(500).json({ error: "Error al obtener el inmueble por ID" });
@@ -38,16 +40,17 @@ const tipoInmuebleCtrl = {
   },
 
   createTipoInmueble: async (req, res) => {
-    const nuevoTipoInmueble = req.body;
+    const { ID_TIPO_INMUEBLE, TIPO } = req.body;
 
     try {
-      const TipoInmueble = await create(nuevoTipoInmueble);
-      res
-        .status(201)
-        .json({
-          id: tipoInmuebleId,
-          message: "Tipo de inmueble creado exitosamente ",
-        });
+      const tipoInmueble = await tipoInmuebleModel.createTipoInmueble({
+        ID_TIPO_INMUEBLE,
+        TIPO,
+      });
+      res.status(201).json({
+        id: tipoInmueble,
+        message: "Tipo de inmueble creado exitosamente ",
+      });
     } catch (err) {
       console.error("Error al crear el Tipo de Inmueble", err);
       res.status(500).json({ error: "Error al crear tipo de inmueble" });
@@ -59,9 +62,12 @@ const tipoInmuebleCtrl = {
     const datosActualizados = req.body;
 
     try {
-      const filasAfectadas = await tipoInmueble.update(id, datosActualizados);
+      const filasAfectadas = await tipoInmuebleModel.updateTipoInmueble(
+        id,
+        datosActualizados
+      );
 
-      if (filasAfectadas > 0) {
+      if (filasAfectadas.affectedRows > 0) {
         res
           .status(200)
           .json({ message: "Tipo de Inmueble actualizado exitosamente" });
@@ -79,7 +85,7 @@ const tipoInmuebleCtrl = {
   deleteTipoInmueble: async (req, res) => {
     const { id } = req.params;
     try {
-      const filasAfectadas = await tipoInmueble.remove(id);
+      const filasAfectadas = await tipoInmuebleModel.deleteTipoInmueble(id);
 
       if (filasAfectadas > 0) {
         res

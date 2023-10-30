@@ -1,10 +1,10 @@
 import pool from "../database/database.js";
 import sql from "mssql";
 
-const perfilModel = {
-  getAllPerfil: async () => {
+const tipoAccesoModel = {
+  getAllAcessos: async () => {
     try {
-      const query = "CALL pa_select_perfil";
+      const query = "CALL pa_select_tipoAcceso";
       const [rows] = await pool.execute(query);
       console.log(rows);
       //pool.end(); // Cerrar la conexión después de ejecutar la consulta
@@ -15,9 +15,9 @@ const perfilModel = {
     }
   },
 
-  getPerfilById: async (id) => {
+  getTipoAccesoById: async (id) => {
     try {
-      const query = "SELECT * FROM cat_perfil  WHERE ID_PERFIL = ?";
+      const query = "SELECT * FROM cat_tipo_acceso  WHERE ID_TIPO_ACCESO = ?";
       const [rows] = await pool.execute(query, [id]);
       return rows;
     } catch (err) {
@@ -26,10 +26,10 @@ const perfilModel = {
     }
   },
 
-  createPerfil: async (data) => {
+  createTipoAcceso: async (data) => {
     try {
-      const query = "CALL pa_insert_perfil(?, ?, ?)";
-      const values = [data.ID_PERFIL, data.PERFIL, data.ESTATUS];
+      const query = "CALL pa_insert_tipoAcceso(?, ?)";
+      const values = [data.ID_TIPO_ACCESO, data.NOMBRE];
       //console.log(data, "///");
       const [rows] = await pool.execute(query, values);
       pool.end();
@@ -40,10 +40,10 @@ const perfilModel = {
     }
   },
 
-  updatePerfil: async (ID_PERFIL, data) => {
+  updateTipoAcceso: async (ID_TIPO_ACCESO, data) => {
     try {
-      const query = "CALL pa_update_perfil(?, ?, ?)";
-      const values = [ID_PERFIL, data.PERFIL, data.ESTATUS];
+      const query = "CALL pa_update_tipoAcceso(?, ?)";
+      const values = [ID_TIPO_ACCESO, data.NOMBRE];
       //console.log(data, "///");
       const [rows] = await pool.execute(query, values);
       //console.log(rows);
@@ -55,9 +55,9 @@ const perfilModel = {
     }
   },
 
-  deletePerfil: async (id) => {
+  deleteTipoAcceso: async (id) => {
     try {
-      const query = "CALL pa_delete_perfil(?)";
+      const query = "CALL pa_delete_tipoAcceso(?)";
       const [rows] = await pool.execute(query, [id]);
       pool.end();
       return rows.affectedRows;
@@ -69,4 +69,4 @@ const perfilModel = {
   },
 };
 
-export default perfilModel;
+export default tipoAccesoModel;

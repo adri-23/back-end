@@ -8,9 +8,6 @@ import https from "https";
 import fs from "fs";
 import { compareSync } from "bcrypt";
 import moment from "moment";
-//import inmuebleModel from "./src/models/inmueble.model.js";
-//import inmuebleModel from "./src/models/inmueble.model.js";
-//import userModel from "./src/models/user.model.js";
 
 const httpServer = createServer(app);
 
@@ -19,9 +16,6 @@ httpServer.listen(config.app.app_port, function (err) {
   let today = moment().format();
   console.log("server up at : " + today);
   console.log("Server listening on Port", config.app.app_port);
-  //inmuebleModel.getAllInmuebles();
-  //inmuebleModel.getInmuebleById({ id: 1 });
-  //userModel.login({ username: "Juan" });
 });
 
 // const io = new WebSocketServer(httpServer,{
