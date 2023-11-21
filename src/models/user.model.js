@@ -26,27 +26,31 @@ const userModel = {
 
   // },
   insert: async (user) => {
-    const connection = await pool();
     try {
-      const query = "CALL ManageUser(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+      const query =
+        "CALL pa_insert_Usuario(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
       const values = [
-        user.NOMBRES,
+        user.ID_USUARIO,
+        user.NOMBRE,
         user.AP_PATERNO,
         user.AP_MATERNO,
         user.CURP,
+        user.RFC,
         user.FECHA_NACIMIENTO,
         user.TELEFONO,
         user.EMAIL,
         user.USUARIO,
         user.CONTRASENA,
-        user.ID_PERFIL,
-        user.ID_USUARIO,
-        user.FECHA_VIGENCIA,
         user.ESTATUS,
-        user.OPERACION,
+        user.FECHA_ALTA,
+        user.FECHA_BAJA,
+        user.ID_ALTA,
+        user.ID_BAJA,
+        user.FECHA_VIGENCIA,
+        user.ID_PERFIL,
       ];
-      const [rows] = await connection.execute(query, values);
-      connection.end();
+      const [rows] = await pool.execute(query, values);
+      pool.end();
       return rows;
     } catch (err) {
       console.log(err);

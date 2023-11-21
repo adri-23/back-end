@@ -20,6 +20,8 @@ import tipoAcceso_routes from "./src/routes/tipo-acceso.routes.js";
 import tipoControlAcceso_routes from "./src/routes/tipo-control-acceso.routes.js";
 import tipoEvento_routes from "./src/routes/tipo-evento.routes.js";
 import tipoInmueble_routes from "./src/routes/tipo-inmueble.routes.js";
+import menuUsuarios_routes from "./src/routes/menu-usuario.routes.js";
+import usuario_routes from "./src/routes/usuarios.routes";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -62,5 +64,7 @@ app.use("/api/", tipoAcceso_routes);
 app.use("/api/", tipoControlAcceso_routes);
 app.use("/api/", tipoEvento_routes);
 app.use("/api/", tipoInmueble_routes);
+app.use("/api/", menuUsuarios_routes);
+app.use("/api", usuario_routes);
 
 export default app;
