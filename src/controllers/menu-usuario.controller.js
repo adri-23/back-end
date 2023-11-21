@@ -37,33 +37,12 @@ const menuUsuarioCtrl = {
   },
 
   createMenuUsuario: async (req, res) => {
-    const {
-      ID_INMUEBLE,
-      NUM_CONTRATO,
-      CALLE,
-      NUMERO_EXTERIOR,
-      NUMERO_INTERIOR,
-      CODIGO_POSTAL,
-      NOMBRE_INMUEBLE,
-      OBSERVACION,
-      ID_COLONIA,
-      ID_TIPO_INMUEBLE,
-      ID_USUARIO,
-    } = req.body;
+    const { ID_PERFIL, ID_MENU_HIJO } = req.body;
 
     try {
       const menuUsuario = await menuUsuarioModel.createMenuUsuario({
-        ID_INMUEBLE,
-        NUM_CONTRATO,
-        CALLE,
-        NUMERO_EXTERIOR,
-        NUMERO_INTERIOR,
-        CODIGO_POSTAL,
-        NOMBRE_INMUEBLE,
-        OBSERVACION,
-        ID_COLONIA,
-        ID_TIPO_INMUEBLE,
-        ID_USUARIO,
+        ID_PERFIL,
+        ID_MENU_HIJO,
       });
       res
         .status(201)

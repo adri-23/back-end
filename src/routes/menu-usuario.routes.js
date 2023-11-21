@@ -1,4 +1,4 @@
-import menuUsuarioCtrl from "../controllers/menu-usuario.controller";
+import menuUsuarioCtrl from "../controllers/menu-usuario.controller.js";
 import express from "express";
 const router = express.Router();
 
