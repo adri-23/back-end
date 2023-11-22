@@ -6,19 +6,23 @@ import validator from "../middleware/validator.js"; //para hecer peticiones segu
 
 const usuarioCtrl = {
   loginUsuario: async (req, res) => {
-    const { username, password } = req.body;
+    const { NOMBRE, CONTRASENA } = req.body;
 
     try {
-      const usuario = await usuarioModel.login(username, password);
-      res.status(200).json({
-        code: 200,
-        message: "success",
-        message_details: "Login exitoso",
-        data: usuario,
-      });
+      const usuarioEncontrado = await usuarioModel.login(NOMBRE, CONTRASENA);
+      if (usuarioEncontrado) {
+        res.json({
+          code: 200,
+          message: "success",
+          message_details: "Inicio de sesión exitoso",
+          data: usuarioEncontrado,
+        });
+      } else {
+        res.status(401).json({ error: "Credenciales incorrectas" });
+      }
     } catch (err) {
-      console.error("Error en el login", err);
-      res.status(401).json({ error: "Credenciales incorrectas" });
+      console.error("Error al realizar el login", err);
+      res.status(500).json({ error: "Error al realizar el login" });
     }
   },
 };

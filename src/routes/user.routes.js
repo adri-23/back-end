@@ -3,7 +3,7 @@ import md_auth from "../middleware/authenticated.js";
 import express from "express";
 import validator from "../middleware/validator.js";
 const router = express.Router();
-router.post("/login", validator.ensureValidate, userCtrl.login);
+router.post("/loginS", validator.ensureValidate, userCtrl.login);
 // router.post('/manageUserMenu', userCtrl.postMenuUser);
 // router.post('/manageUserCajero',userCtrl.postCajeroUser);
 // router.post('/users',md_auth.ensureAuth, userCtrl.users);

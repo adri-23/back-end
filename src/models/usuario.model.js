@@ -2,19 +2,16 @@ import pool from "../database/database.js";
 import sql from "mssql";
 
 const usuarioModel = {
-  login: async (username, password) => {
+  login: async (NOMBRE, CONTRASENA) => {
     try {
       const query =
-        "SELECT * FROM cat_usuario WHERE ID_USUARIO = ? AND CONTRASENA = ? AND ESTATUS = 1245";
-      const result = await db.query(query, [username, password]);
-
-      if (result.length > 0) {
-        return result[0];
-      } else {
-        throw new Error("Credenciales incorrectas");
-      }
+        "SELECT * FROM cat_usuario WHERE NOMBRE = ? AND CONTRASENA = ?";
+      const [rows, fields] = await pool.execute(query, [NOMBRE, CONTRASENA]);
+      pool.end();
+      return rows;
     } catch (err) {
-      throw new Error("Error en el proceso de login");
+      console.error("Error al realizar el login", err);
+      throw new Error("Error al realizar el login");
     }
   },
 };
