@@ -25,6 +25,59 @@ const usuarioCtrl = {
       res.status(500).json({ error: "Error al realizar el login" });
     }
   },
+
+  createUsuario: async (req, res) => {
+    const {
+      ID_USUARIO,
+      NOMBRE,
+      AP_PATERNO,
+      AP_MATERNO,
+      CURP,
+      RFC,
+      FECHA_NACIMIENTO,
+      TELEFONO,
+      EMAIL,
+      USUARIO,
+      CONTRASENA,
+      ESTATUS,
+      FECHA_ALTA,
+      FECHA_BAJA,
+      ID_ALTA,
+      ID_BAJA,
+      FECHA_VIGENCIA,
+      ID_PERFIL,
+    } = req.body;
+
+    try {
+      const usuario = await usuarioModel.insert({
+        ID_USUARIO,
+        NOMBRE,
+        AP_PATERNO,
+        AP_MATERNO,
+        CURP,
+        RFC,
+        FECHA_NACIMIENTO,
+        TELEFONO,
+        EMAIL,
+        USUARIO,
+        CONTRASENA,
+        ESTATUS,
+        FECHA_ALTA,
+        FECHA_BAJA,
+        ID_ALTA,
+        ID_BAJA,
+        FECHA_VIGENCIA,
+        ID_PERFIL,
+      });
+      res.status(201).json({
+        id: usuario,
+        message: "Usuario creado exitosamente.",
+      });
+    } catch (err) {
+      console.error("Error al crear el usuario", err);
+      res.status(500).json({ error: "Error al crear el usuario" });
+    }
+  },
 };
 
 export default usuarioCtrl;
