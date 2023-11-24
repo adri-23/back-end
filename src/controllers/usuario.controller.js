@@ -71,7 +71,7 @@ const usuarioCtrl = {
       });
       res.status(201).json({
         id: usuario,
-        message: "Usuario creado exitosamente",
+        message: "Usuario creado exitosamente.",
       });
     } catch (err) {
       console.error("Error al crear el usuario", err);
